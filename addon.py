@@ -27,7 +27,7 @@ if __name__ == '__main__':
         total_episodes = response['result']['tvshows'][0]['episode']
         watched_episodes = response['result']['tvshows'][0]['watchedepisodes']
         
-        query = {"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": { "filter": { "field": "tvshow", "operator": "is", "value": "" }, "limits": { "start" : 0, "end": total_episodes }, "properties": ["playcount", "runtime", "tvshowid"], "sort": { "order": "ascending", "method": "label" } }, "id": "libTvShows"}
+        query = {"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": { "filter": { "field": "tvshow", "operator": "is", "value": "" }, "limits": { "start" : 0, "end": total_episodes }, "properties": ["playcount", "runtime", "tvshowid", "streamdetails"], "sort": { "order": "ascending", "method": "label" } }, "id": "libTvShows"}
         query = json.loads(json.dumps(query))
         query['params']['filter']['value'] = show_title
         response = json.loads(xbmc.executeJSONRPC(json.dumps(query)))
