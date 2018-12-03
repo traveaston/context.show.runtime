@@ -16,7 +16,7 @@ def display_details(addon, show_title, message):
     addon_name = addon.getAddonInfo('name')
     xbmcgui.Dialog().ok('{0} - {1}'.format(addon_name, show_title), message)
 
-if __name__ == '__main__':
+def run():
     query = {"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": { "field": "title", "operator": "is", "value": "" }, "limits": { "start": 0, "end": 1}, "properties": [ "title", "originaltitle", "playcount", "episode", "episodeguide", "watchedepisodes", "season"], "sort": { "order": "ascending", "method": "label"} }, "id": "libTvShows"}
     query = json.loads(json.dumps(query))
     query['params']['filter']['value'] = sys.listitem.getLabel()
