@@ -7,7 +7,6 @@ import xbmcaddon
 import xbmcgui
 
 addon = xbmcaddon.Addon()
-remaining_runtime, total_runtime, watched_runtime = 0, 0, 0
 
 def convert_time(runtime):
     return '{0} days {1} hours {2} minutes'.format(runtime/24/60, runtime/60%24, runtime%60)
@@ -17,6 +16,7 @@ def display_details(addon, show_title, message):
     xbmcgui.Dialog().ok('{0} - {1}'.format(addon_name, show_title), message)
 
 def run():
+    remaining_runtime, total_runtime, watched_runtime = 0, 0, 0
     query = {"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": { "field": "title", "operator": "is", "value": "" }, "limits": { "start": 0, "end": 1}, "properties": [ "title", "originaltitle", "playcount", "episode", "episodeguide", "watchedepisodes", "season"], "sort": { "order": "ascending", "method": "label"} }, "id": "libTvShows"}
     query = json.loads(json.dumps(query))
     query['params']['filter']['value'] = sys.listitem.getLabel()
