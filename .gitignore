@@ -1,0 +1,11 @@
+*.pyc
+*.pyo
+*~
+.DS*
+.cache
+.pylint_rc
+/.idea
+/.project
+/.pydevproject
+/.settings
+Thumbs.db
