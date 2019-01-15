@@ -11,9 +11,14 @@ addon = xbmcaddon.Addon()
 def convert_time(runtime):
     return '{0} days {1} hours {2} minutes'.format(runtime/24/60, runtime/60%24, runtime%60)
 
-def display_details(addon, show_title, message):
-    addon_name = addon.getAddonInfo('name')
-    xbmcgui.Dialog().ok('{0} - {1}'.format(addon_name, show_title), message)
+# wrapper for dialog box, kodi function is not implemented correctly
+# issue details here: https://github.com/xbmc/xbmc/issues/14824
+def dialog(title, lines):
+    line1 = lines.pop(0)
+    line2 = lines.pop(0)
+    remaining_lines = '\n'.join(lines)
+
+    xbmcgui.Dialog().ok(title, line1, line2, remaining_lines)
 
 def run():
     remaining_runtime, total_runtime, watched_runtime = 0, 0, 0
@@ -48,10 +53,12 @@ def run():
 
         if addon.getSetting('detailed_info') == 'true':
             percent = '{0}%'.format(str(round((float(watched_episodes)/total_episodes) * 100))[:-2])
-            message = 'Watched/Unwatched: {0}/{1} ({2})'.format(watched_episodes, total_episodes, percent)
-            message = '{0}\nRemaining runtime: {1}'.format(message, remaining_runtime)
-            message = '{0}\nWatched runtime: {1}'.format(message, watched_runtime)
-            message = '{0}\nTotal runtime: {1}'.format(message, total_runtime)
-            display_details(addon, show_title, message)
+            message = []
+            message.append('Watched/Unwatched: {0}/{1} ({2})'.format(watched_episodes, total_episodes, percent))
+            message.append('Remaining: ' + remaining_runtime)
+            message.append('Watched: ' + watched_runtime)
+            message.append('Total runtime: ' + total_runtime)
+
+            dialog(show_title, message)
         else:
             xbmc.executebuiltin("Notification(Remaining runtime - {0}, {1})".format(show_title, remaining_runtime))
