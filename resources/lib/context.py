@@ -55,9 +55,9 @@ def run():
             percent = '{0}%'.format(str(round((float(watched_episodes)/total_episodes) * 100))[:-2])
             message = []
             message.append('Watched/Unwatched: {0}/{1} ({2})'.format(watched_episodes, total_episodes, percent))
-            message.append('Remaining: ' + remaining_runtime)
-            message.append('Watched: ' + watched_runtime)
             message.append('Total runtime: ' + total_runtime)
+            message.append('Watched: ' + watched_runtime)
+            message.append('Remaining: ' + remaining_runtime)
 
             dialog(show_title, message)
         else:
