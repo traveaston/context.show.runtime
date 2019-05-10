@@ -21,11 +21,16 @@ def format_time(seconds):
         }
 
     for division, value in sorted(divisions.items()):
-        # make singular if necessary
+        # remove empty divisions and make singular if necessary
         if value == 1:
             division = division[:-1]
+        elif value is 0:
+            continue
 
         time += '{0} {1}, '.format(value, division)
+
+    if time == '':
+        return 'none'
 
     return time.strip(', ')
 
