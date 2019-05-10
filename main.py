@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from resources.lib import kodilogging
+import logging
+import sys
 from resources.lib import context
 
-import logging
-import xbmcaddon
-
-ADDON = xbmcaddon.Addon()
-kodilogging.config()
-
-context.run()
+context.show_runtime(sys.listitem.getLabel())

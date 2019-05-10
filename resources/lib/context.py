@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import json
-import sys
 import xbmc
 import xbmcaddon
 import xbmcgui
@@ -33,9 +32,8 @@ def dialog(title, lines):
 
     xbmcgui.Dialog().ok(title, line1, line2, remaining_lines)
 
-def run():
+def show_runtime(series):
     remaining_runtime, total_runtime, watched_runtime = 0, 0, 0
-    series = sys.listitem.getLabel()
     query = {
         "jsonrpc": "2.0",
         "method": "VideoLibrary.GetTVShows",
