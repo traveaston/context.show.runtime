@@ -43,6 +43,13 @@ def dialog(title, lines):
 
     xbmcgui.Dialog().ok(title, line1, line2, remaining_lines)
 
+def notify(title, message='empty'):
+    if message is 'empty':
+        message = title
+        title = "Notification:"
+
+    xbmc.executebuiltin('Notification("{0}", "{1}")'.format(title, message))
+
 def show_runtime(series):
     remaining_runtime, total_runtime, watched_runtime = 0, 0, 0
     query = {
@@ -117,4 +124,4 @@ def show_runtime(series):
 
             dialog(series, message)
         else:
-            xbmc.executebuiltin("Notification(Remaining runtime - {0}, {1})".format(series, remaining_runtime))
+            notify('Remaining runtime - ' + series, remaining_runtime)
