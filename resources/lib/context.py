@@ -2,10 +2,8 @@
 
 import json
 import xbmc
-import xbmcaddon
 import xbmcgui
-
-addon = xbmcaddon.Addon()
+from resources.lib import kodiutils
 
 def format_time(seconds):
     time = ''
@@ -96,7 +94,7 @@ def show_runtime(series):
         total_runtime = format_time(total_runtime)
         watched_runtime = format_time(watched_runtime)
 
-        if addon.getSetting('detailed_info') == 'true':
+        if kodiutils.get_setting('detailed_info') == 'true':
             percent = '{0}%'.format(str(round((float(watched_episodes)/total_episodes) * 100))[:-2])
             message = []
             message.append('Watched/Unwatched: {0}/{1} ({2})'.format(watched_episodes, total_episodes, percent))
