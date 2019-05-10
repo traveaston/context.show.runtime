@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import logging
 import sys
 from resources.lib import context
 

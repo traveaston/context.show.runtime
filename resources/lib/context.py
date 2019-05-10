@@ -117,7 +117,7 @@ def show_runtime(series):
         if kodiutils.get_setting('detailed_info') == 'true':
             percent = '{0}%'.format(str(round((float(watched_episodes)/total_episodes) * 100))[:-2])
             message = []
-            message.append('Watched/Unwatched: {0}/{1} ({2})'.format(watched_episodes, total_episodes, percent))
+            message.append('Watched episodes: {0}/{1} ({2})'.format(watched_episodes, total_episodes, percent))
             message.append('Total runtime: ' + total_runtime)
             message.append('Watched: ' + watched_runtime)
             message.append('Remaining: ' + remaining_runtime)
