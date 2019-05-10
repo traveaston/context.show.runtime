@@ -8,8 +8,21 @@ import xbmcgui
 
 addon = xbmcaddon.Addon()
 
-def convert_time(runtime):
-    return '{0} days {1} hours {2} minutes'.format(runtime/24/60, runtime/60%24, runtime%60)
+def format_time(seconds):
+    time = ''
+    divisions = {
+        'days': seconds / 60 / 60 / 24,
+        'hours': seconds / 60 / 60 % 24,
+        'minutes': seconds / 60 % 60
+    }
+    for division, value in sorted(divisions.iteritems()):
+        # make singular if necessary
+        if value is 1:
+            division = division[:-1]
+
+        time += '{0} {1}, '.format(value, division)
+
+    return time.strip(', ')
 
 # wrapper for dialog box, kodi function is not implemented correctly
 # issue details here: https://github.com/xbmc/xbmc/issues/14824
@@ -41,15 +54,15 @@ def run():
 
         for episode in response['result']['episodes']:
             if episode['playcount'] == 0:
-                remaining_runtime += episode['runtime'] / 60
+                remaining_runtime += episode['runtime']
             else:
-                watched_runtime += episode['runtime'] / 60
+                watched_runtime += episode['runtime']
 
-            total_runtime += episode['runtime'] / 60
+            total_runtime += episode['runtime']
 
-        remaining_runtime = convert_time(remaining_runtime)
-        total_runtime = convert_time(total_runtime)
-        watched_runtime = convert_time(watched_runtime)
+        remaining_runtime = format_time(remaining_runtime)
+        total_runtime = format_time(total_runtime)
+        watched_runtime = format_time(watched_runtime)
 
         if addon.getSetting('detailed_info') == 'true':
             percent = '{0}%'.format(str(round((float(watched_episodes)/total_episodes) * 100))[:-2])
