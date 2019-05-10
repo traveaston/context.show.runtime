@@ -12,9 +12,9 @@ def format_time(seconds):
         'hours': seconds / 60 / 60 % 24,
         'minutes': seconds / 60 % 60
     }
-    for division, value in sorted(divisions.iteritems()):
+    for division, value in sorted(divisions.items()):
         # make singular if necessary
-        if value is 1:
+        if value == 1:
             division = division[:-1]
 
         time += '{0} {1}, '.format(value, division)
