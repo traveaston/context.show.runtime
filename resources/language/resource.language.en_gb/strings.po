@@ -25,3 +25,7 @@ msgstr ""
 msgctxt "#32001"
 msgid "Detailed runtime dialog info"
 msgstr ""
+
+msgctxt "#32002"
+msgid "Show runtime in days (if more than 24 hours)"
+msgstr ""

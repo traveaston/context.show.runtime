@@ -7,11 +7,19 @@ from resources.lib import kodiutils
 
 def format_time(seconds):
     time = ''
-    divisions = {
-        'days': seconds / 60 / 60 / 24,
-        'hours': seconds / 60 / 60 % 24,
-        'minutes': seconds / 60 % 60
-    }
+
+    if kodiutils.get_setting('show_days') == 'true':
+        divisions = {
+            'days': seconds / 60 / 60 / 24,
+            'hours': seconds / 60 / 60 % 24,
+            'minutes': seconds / 60 % 60
+        }
+    else:
+        divisions = {
+            'hours': seconds / 60 / 60,
+            'minutes': seconds / 60 % 60
+        }
+
     for division, value in sorted(divisions.items()):
         # make singular if necessary
         if value == 1:
