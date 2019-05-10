@@ -35,21 +35,55 @@ def dialog(title, lines):
 
 def run():
     remaining_runtime, total_runtime, watched_runtime = 0, 0, 0
-    query = {"jsonrpc": "2.0", "method": "VideoLibrary.GetTVShows", "params": { "filter": { "field": "title", "operator": "is", "value": "" }, "limits": { "start": 0, "end": 1}, "properties": [ "title", "originaltitle", "playcount", "episode", "episodeguide", "watchedepisodes", "season"], "sort": { "order": "ascending", "method": "label"} }, "id": "libTvShows"}
-    query = json.loads(json.dumps(query))
-    query['params']['filter']['value'] = sys.listitem.getLabel()
+    series = sys.listitem.getLabel()
+    query = {
+        "jsonrpc": "2.0",
+        "method": "VideoLibrary.GetTVShows",
+        "params": {
+            "filter": {
+                "field": "title",
+                "operator": "is",
+                "value": series
+            },
+            "limits": {
+                "start": 0,
+                "end": 1
+            },
+            "properties": [
+                "episode",
+                "watchedepisodes"
+            ]
+        },
+        "id": "libTvShows"
+    }
+
     response = json.loads(xbmc.executeJSONRPC(json.dumps(query)))
 
     if response['result']['limits']['total'] > 0:
-        show_id = response['result']['tvshows'][0]['tvshowid']
-        show_title = response['result']['tvshows'][0]['title']
-        total_seasons = response['result']['tvshows'][0]['season']
         total_episodes = response['result']['tvshows'][0]['episode']
         watched_episodes = response['result']['tvshows'][0]['watchedepisodes']
 
-        query = {"jsonrpc": "2.0", "method": "VideoLibrary.GetEpisodes", "params": { "filter": { "field": "tvshow", "operator": "is", "value": "" }, "limits": { "start" : 0, "end": total_episodes }, "properties": ["playcount", "runtime", "tvshowid", "streamdetails"], "sort": { "order": "ascending", "method": "label" } }, "id": "libTvShows"}
-        query = json.loads(json.dumps(query))
-        query['params']['filter']['value'] = show_title
+        query = {
+            "jsonrpc": "2.0",
+            "method": "VideoLibrary.GetEpisodes",
+            "params": {
+                "filter": {
+                    "field": "tvshow",
+                    "operator": "is",
+                    "value": series
+                },
+                "limits": {
+                    "start" : 0,
+                    "end": total_episodes
+                },
+                "properties": [
+                    "playcount",
+                    "runtime"
+                ]
+            },
+            "id": "libTvShows"
+        }
+
         response = json.loads(xbmc.executeJSONRPC(json.dumps(query)))
 
         for episode in response['result']['episodes']:
@@ -72,6 +106,6 @@ def run():
             message.append('Watched: ' + watched_runtime)
             message.append('Remaining: ' + remaining_runtime)
 
-            dialog(show_title, message)
+            dialog(series, message)
         else:
-            xbmc.executebuiltin("Notification(Remaining runtime - {0}, {1})".format(show_title, remaining_runtime))
+            xbmc.executebuiltin("Notification(Remaining runtime - {0}, {1})".format(series, remaining_runtime))
