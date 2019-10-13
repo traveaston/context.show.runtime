@@ -75,53 +75,57 @@ def show_runtime(series):
 
     response = json.loads(xbmc.executeJSONRPC(json.dumps(query)))
 
-    if response['result']['limits']['total'] > 0:
-        total_episodes = response['result']['tvshows'][0]['episode']
-        watched_episodes = response['result']['tvshows'][0]['watchedepisodes']
+    if response['result']['limits']['total'] != 1:
+        xbmc.log('Show runtime: <>1 result found for {}, exiting'.format(series))
+        notify('Show runtime: {}'.format(series), '<>1 result found for {}, exiting'.format(series))
+        return
 
-        query = {
-            "jsonrpc": "2.0",
-            "method": "VideoLibrary.GetEpisodes",
-            "params": {
-                "filter": {
-                    "field": "tvshow",
-                    "operator": "is",
-                    "value": series
-                },
-                "limits": {
-                    "start" : 0,
-                    "end": total_episodes
-                },
-                "properties": [
-                    "playcount",
-                    "runtime"
-                ]
+    total_episodes = response['result']['tvshows'][0]['episode']
+    watched_episodes = response['result']['tvshows'][0]['watchedepisodes']
+
+    query = {
+        "jsonrpc": "2.0",
+        "method": "VideoLibrary.GetEpisodes",
+        "params": {
+            "filter": {
+                "field": "tvshow",
+                "operator": "is",
+                "value": series
             },
-            "id": "libTvShows"
-        }
+            "limits": {
+                "start" : 0,
+                "end": total_episodes
+            },
+            "properties": [
+                "playcount",
+                "runtime"
+            ]
+        },
+        "id": "libTvShows"
+    }
 
-        response = json.loads(xbmc.executeJSONRPC(json.dumps(query)))
+    response = json.loads(xbmc.executeJSONRPC(json.dumps(query)))
 
-        for episode in response['result']['episodes']:
-            if episode['playcount'] == 0:
-                remaining_runtime += episode['runtime']
-            else:
-                watched_runtime += episode['runtime']
-
-            total_runtime += episode['runtime']
-
-        remaining_runtime = format_time(remaining_runtime)
-        total_runtime = format_time(total_runtime)
-        watched_runtime = format_time(watched_runtime)
-
-        if kodiutils.get_setting('detailed_info') == 'true':
-            percent = '{}%'.format(str(round((float(watched_episodes)/total_episodes) * 100))[:-2])
-            message = []
-            message.append('Watched episodes: {}/{} ({})'.format(watched_episodes, total_episodes, percent))
-            message.append('Total runtime: {}'.format(total_runtime))
-            message.append('Watched: {}'.format(watched_runtime))
-            message.append('Remaining: {}'.format(remaining_runtime))
-
-            dialog(series, message)
+    for episode in response['result']['episodes']:
+        if episode['playcount'] == 0:
+            remaining_runtime += episode['runtime']
         else:
-            notify('Remaining runtime - {}'.format(series), remaining_runtime)
+            watched_runtime += episode['runtime']
+
+        total_runtime += episode['runtime']
+
+    remaining_runtime = format_time(remaining_runtime)
+    total_runtime = format_time(total_runtime)
+    watched_runtime = format_time(watched_runtime)
+
+    if kodiutils.get_setting('detailed_info') == 'true':
+        percent = '{}%'.format(str(round((float(watched_episodes)/total_episodes) * 100))[:-2])
+        message = []
+        message.append('Watched episodes: {}/{} ({})'.format(watched_episodes, total_episodes, percent))
+        message.append('Total runtime: {}'.format(total_runtime))
+        message.append('Watched: {}'.format(watched_runtime))
+        message.append('Remaining: {}'.format(remaining_runtime))
+
+        dialog(series, message)
+    else:
+        notify('Remaining runtime - {}'.format(series), remaining_runtime)
