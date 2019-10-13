@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="context.show.runtime" name="Show runtime" version="1.1.0" provider-name="traveaston, diskutant, curti">
+<addon id="context.show.runtime" name="Show runtime" version="1.2.0" provider-name="traveaston, diskutant, curti">
     <requires>
         <import addon="xbmc.python" version="2.25.0"/>
     </requires>
@@ -21,8 +21,8 @@
         <email></email>
         <source></source>
         <news>
-            v1.1.0 (2018-11-05)
-            Updated for Kodi v18 Leia
+            v1.2.0 (2019-05-10)
+            Moderate overhaul and show as hours (not days) by default
         </news>
         <disclaimer></disclaimer>
         <assets>
