@@ -27,7 +27,7 @@ def format_time(seconds):
         elif value is 0:
             continue
 
-        time += '{0} {1}, '.format(value, division)
+        time += '{} {}, '.format(value, division)
 
     if time == '':
         return 'none'
@@ -48,7 +48,7 @@ def notify(title, message='empty'):
         message = title
         title = "Notification:"
 
-    xbmc.executebuiltin('Notification("{0}", "{1}")'.format(title, message))
+    xbmc.executebuiltin('Notification("{}", "{}")'.format(title, message))
 
 def show_runtime(series):
     remaining_runtime, total_runtime, watched_runtime = 0, 0, 0
@@ -115,13 +115,13 @@ def show_runtime(series):
         watched_runtime = format_time(watched_runtime)
 
         if kodiutils.get_setting('detailed_info') == 'true':
-            percent = '{0}%'.format(str(round((float(watched_episodes)/total_episodes) * 100))[:-2])
+            percent = '{}%'.format(str(round((float(watched_episodes)/total_episodes) * 100))[:-2])
             message = []
-            message.append('Watched episodes: {0}/{1} ({2})'.format(watched_episodes, total_episodes, percent))
-            message.append('Total runtime: ' + total_runtime)
-            message.append('Watched: ' + watched_runtime)
-            message.append('Remaining: ' + remaining_runtime)
+            message.append('Watched episodes: {}/{} ({})'.format(watched_episodes, total_episodes, percent))
+            message.append('Total runtime: {}'.format(total_runtime))
+            message.append('Watched: {}'.format(watched_runtime))
+            message.append('Remaining: {}'.format(remaining_runtime))
 
             dialog(series, message)
         else:
-            notify('Remaining runtime - ' + series, remaining_runtime)
+            notify('Remaining runtime - {}'.format(series), remaining_runtime)
