@@ -51,7 +51,7 @@ def notify(title, message='empty'):
     xbmc.executebuiltin('Notification("{}", "{}")'.format(title, message))
 
 def show_runtime(series):
-    remaining_runtime, total_runtime, watched_runtime = 0, 0, 0
+    remaining_runtime, total_runtime, watched_runtime, inaccurate_episodes = 0, 0, 0, 0
     query = {
         "jsonrpc": "2.0",
         "method": "VideoLibrary.GetTVShows",
@@ -107,6 +107,10 @@ def show_runtime(series):
     response = json.loads(xbmc.executeJSONRPC(json.dumps(query)))
 
     for episode in response['result']['episodes']:
+        if episode['runtime'] == 0:
+            inaccurate_episodes += 1
+            xbmc.log('Show runtime warning: Duration missing for {} {}'.format(series, episode['label']))
+
         if episode['playcount'] == 0:
             remaining_runtime += episode['runtime']
         else:
@@ -118,6 +122,10 @@ def show_runtime(series):
     total_runtime = format_time(total_runtime)
     watched_runtime = format_time(watched_runtime)
 
+    title = series
+    if inaccurate_episodes > 0:
+        title += ' (inaccurate)'
+
     if kodiutils.get_setting('detailed_info') == 'true':
         percent = '{}%'.format(str(round((float(watched_episodes)/total_episodes) * 100))[:-2])
         message = []
@@ -126,6 +134,9 @@ def show_runtime(series):
         message.append('Watched: {}'.format(watched_runtime))
         message.append('Remaining: {}'.format(remaining_runtime))
 
-        dialog(series, message)
+        if inaccurate_episodes > 0:
+            message.append('Warning: missing duration for {} episodes'.format(inaccurate_episodes))
+
+        dialog(title, message)
     else:
-        notify('Remaining runtime - {}'.format(series), remaining_runtime)
+        notify(title, '{} remaining'.format(remaining_runtime))
